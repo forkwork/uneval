@@ -126,7 +126,7 @@ impl<W: Write> ser::Serializer for &mut Uneval<W> {
     }
 
     fn serialize_str(self, v: &str) -> SerResult {
-        write!(self.writer, "\"{}\".into()", v.escape_default().collect::<String>())?;
+        write!(self.writer, "r####\"{}\"####.into()", v)?;
         Ok(())
     }
 
@@ -371,6 +371,7 @@ impl<W: Write> ser::SerializeStruct for &mut Uneval<W> {
     }
 
     fn end(self) -> SerResult {
+        self.comma()?;
         write!(self.writer, "}}")?;
         self.inside = true;
         Ok(())
